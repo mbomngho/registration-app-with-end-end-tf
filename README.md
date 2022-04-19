@@ -14,7 +14,7 @@ aws ssm get-parameter --name "kojitechs-ssm-kp" --output text --query  Parameter
 ## To connect to our app 
 
 ```hcl
-Username: admin101
+Username: kojitech
 Password: password101
 ```
 ### To run this code you should use 
