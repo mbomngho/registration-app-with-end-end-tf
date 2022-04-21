@@ -95,4 +95,4 @@ aws ssm get-parameter --name "jenkins-agent-bootstrap-ssh-key" --output text --q
 ssh -i "jenkins_ssh_file" ec2-user@public_ip
 ```
 
-Module is maintained by 
+Module is maintained by [kojibello](koji058@gmail.com)
