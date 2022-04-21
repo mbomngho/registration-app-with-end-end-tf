@@ -95,4 +95,4 @@ aws ssm get-parameter --name "jenkins-agent-bootstrap-ssh-key" --output text --q
 ssh -i "jenkins_ssh_file" ec2-user@public_ip
 ```
 
-Module is maintained by [&&&](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-autoscaling/graphs/contributors).
+Module is maintained by 
