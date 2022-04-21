@@ -7,7 +7,7 @@ locals {
 
 data "aws_secretsmanager_secret_version" "rds_secret_target" {
   depends_on = [module.aurora]
-  secret_id  = module.aurora.secrets_version.secret_id
+  secret_id  = module.aurora.secrets_version
 }
 
 resource "aws_instance" "web" {
@@ -49,7 +49,7 @@ resource "aws_instance" "registration_app" {
   }
   lifecycle {
     ignore_changes = [
-    user_data, ]
+    ]
   }
 }
 
@@ -68,16 +68,3 @@ resource "aws_ssm_parameter" "ssm_kp" {
     ]
   }
 }
-
-#resource "aws_lb_target_group_attachment" "register_app" {
-#  count = length(local.Name)
-#  target_group_arn = aws_lb_target_group.register_app.arn
-#  target_id = aws_instance.registration_app[count.index].id
-#  port   = 8080
-#}
-
-#resource "aws_lb_target_group_attachment" "front_end" {
-#  target_group_arn = aws_lb_target_group.kojitech-targetgroup.arn
-#  target_id = aws_instance.web.id
-#  port   = 8080
-#}

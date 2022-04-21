@@ -1,46 +1,4 @@
-/*resource "aws_lb" "kojitechs-lb" {
-  name               = format("%s-%s", var.component_name, "kojitechs-lb")
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.web.id]
-  subnets            = aws_subnet.public_subnet.*.id
 
-  tags = {
-    Name = format("%s-%s", var.component_name, "kojitechs-lb")
-  }
-}
-
-resource "aws_lb_target_group" "register_app" {
-  name     = format("%s-%s", var.component_name, "registerapp")
-  port     = var.https_port
-  protocol = "HTTP"
-  vpc_id   = local.vpc_id
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 3
-    protocol            = "HTTP"
-    matcher             = "200"
-    path                = "/login"
-    interval            = 30
-  }
-
-}
-
-resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.kojitechs-lb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = module.acm.acm_certificate_arn
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.register_app.arn
-  }
-}
-*/
 # Terraform AWS Application Load Balancer (ALB)
 module "alb" {
   source = "terraform-aws-modules/alb/aws"
@@ -53,8 +11,7 @@ module "alb" {
   subnets            = aws_subnet.public_subnet.*.id
 
   security_groups = [aws_security_group.web.id]
-  # Listeners
-  # HTTP Listener - HTTP to HTTPS Redirect
+
   http_tcp_listeners = [
     {
       port        = 80
@@ -79,7 +36,7 @@ module "alb" {
       health_check = {
         enabled             = true
         interval            = 30
-        path                = "/app1/index.html"
+        path                = "/app2/index.html"
         port                = "traffic-port"
         healthy_threshold   = 3
         unhealthy_threshold = 3
@@ -89,16 +46,16 @@ module "alb" {
       }
       protocol_version = "HTTP1"
       #   App1 Target Group - Targets
-      #      targets = {
-      #        my_app1_vm1 = {
-      #          target_id = module.ec2_instance_pub.id
-      #          port      = 80
-      #        },
-      #        my_app1_vm2 = {
-      #          target_id = module.ec2_instance_pub.id
-      #          port      = 80
-      #        }
-      #      }
+      targets = {
+        my_app1_vm1 = {
+          target_id = aws_instance.web.id
+          port      = 80
+        },
+        my_app1_vm2 = {
+          target_id = aws_instance.web.id
+          port      = 80
+        }
+      }
       # tags =local.common_tags # Target Group Tags
     },
     # App2 Target Group - TG Index = 1
@@ -236,30 +193,6 @@ data "aws_route53_zone" "mydomain" {
 }
 
 data "aws_caller_identity" "current" {}
-/*
-resource "aws_route53_record" "default_dns" {
-  zone_id = data.aws_route53_zone.mydomain.zone_id
-  name    = var.register_dns
-  type    = "A"
-  alias {
-    name                   = aws_lb.kojitechs-lb.dns_name
-    zone_id                = aws_lb.kojitechs-lb.zone_id
-    evaluate_target_health = true
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "3.0.0"
-
-  domain_name               = trimsuffix(data.aws_route53_zone.mydomain.name, ".")
-  zone_id                   = data.aws_route53_zone.mydomain.zone_id
-  subject_alternative_names = tolist([lookup(var.subject_alternative_names, terraform.workspace)])
-}
-*/
 
 resource "aws_route53_record" "default_dns" {
   zone_id = data.aws_route53_zone.mydomain.zone_id
