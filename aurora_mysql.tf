@@ -33,6 +33,7 @@ resource "aws_security_group" "db_sg" {
 }
 
 module "aurora" {
+
   source = "git::https://github.com/Bkoji1150/aws-rdscluster-kojitechs-tf.git"
 
   name           = local.name
@@ -68,16 +69,15 @@ module "aurora" {
   master_username                 = "dbadmin"
 }
 
+
 resource "aws_db_parameter_group" "example" {
   name        = "${local.name}-aurora-db-57-parameter-group"
   family      = "aurora-mysql5.7"
   description = "${local.name}-aurora-db-57-parameter-group"
-
 }
 
 resource "aws_rds_cluster_parameter_group" "example" {
   name        = "${local.name}-aurora-57-cluster-parameter-group"
   family      = "aurora-mysql5.7"
   description = "${local.name}-aurora-57-cluster-parameter-group"
-
 }

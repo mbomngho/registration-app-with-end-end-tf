@@ -36,7 +36,7 @@ module "alb" {
       health_check = {
         enabled             = true
         interval            = 30
-        path                = "/app2/index.html"
+        path                = "/app1/index.html"
         port                = "traffic-port"
         healthy_threshold   = 3
         unhealthy_threshold = 3
@@ -56,19 +56,19 @@ module "alb" {
           port      = 80
         }
       }
-      # tags =local.common_tags # Target Group Tags
+      tags = local.mandatory_tag # Target Group Tags
     },
     # App2 Target Group - TG Index = 1
     {
       name_prefix          = "app2"
       backend_protocol     = "HTTP"
-      backend_port         = 8080
+      backend_port         = 80
       target_type          = "instance"
       deregistration_delay = 10
       health_check = {
         enabled             = true
         interval            = 30
-        path                = "/login"
+        path                = "/app2/index.html"
         port                = "traffic-port"
         healthy_threshold   = 3
         unhealthy_threshold = 3
@@ -78,17 +78,17 @@ module "alb" {
       }
       protocol_version = "HTTP1"
       # App2 Target Group - Targets
-      #      targets = {
-      #        my_app2_vm1 = {
-      #          target_id =  aws_instance.registration_app[0].id
-      #          port      = 8080
-      #        },
-      #        my_app2_vm2 = {
-      #          target_id =  aws_instance.registration_app[1].id
-      #          port      = 8080
-      #        }
-      #      }
-      # tags =local.common_tags # Target Group Tags
+      targets = {
+        my_app2_vm1 = {
+          target_id = aws_instance.web_2.id
+          port      = 80
+        },
+        my_app2_vm2 = {
+          target_id = aws_instance.web_2.id
+          port      = 80
+        }
+      }
+      tags = local.mandatory_tag # Target Group Tags
     },
     # App3 Target Group - TG Index = 2
     {

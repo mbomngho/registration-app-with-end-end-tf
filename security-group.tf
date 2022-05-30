@@ -39,22 +39,16 @@ resource "aws_security_group" "web" {
   }
 }
 
+
 resource "aws_security_group" "web_server" {
   name        = "${var.component_name}_web_server"
   description = "Allow shh inbound traffic from ${aws_security_group.web.id}"
   vpc_id      = local.vpc_id
 
   ingress {
-    description = "ssh from VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["71.163.242.34/32"]
-  }
-  ingress {
     description     = "http from VPC"
-    from_port       = 8080
-    to_port         = 8080
+    from_port       = 80
+    to_port         = 80
     protocol        = "tcp"
     cidr_blocks     = ["71.163.242.34/32"]
     security_groups = [aws_security_group.web.id]

@@ -66,10 +66,9 @@ resource "aws_subnet" "public_subnet" {
 resource "aws_subnet" "priv_sub" {
   count = local.create_vpc ? length(var.cidr_privsubnet) : 0
 
-  vpc_id                  = local.vpc_id
-  cidr_block              = var.cidr_privsubnet[count.index]
-  map_public_ip_on_launch = true
-  availability_zone       = local.azs[count.index]
+  vpc_id            = local.vpc_id
+  cidr_block        = var.cidr_privsubnet[count.index]
+  availability_zone = local.azs[count.index]
 
   tags = {
     "Name" = "priva-sub-${local.azs[count.index]}"

@@ -6,6 +6,7 @@ locals {
 }
 
 data "aws_secretsmanager_secret_version" "rds_secret_target" {
+
   depends_on = [module.aurora]
   secret_id  = module.aurora.secrets_version
 }
@@ -14,14 +15,29 @@ resource "aws_instance" "web" {
 
   ami                    = data.aws_ami.amzlinux2.id
   instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.public_subnet[0].id
+  subnet_id              = local.subnet_id[0]
   user_data              = file("${path.module}/template/app1-http.sh")
   vpc_security_group_ids = [aws_security_group.web_server.id]
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   key_name               = aws_key_pair.bastion_instance.id
 
   tags = {
-    Name = "web_instance"
+    Name = "app1"
+  }
+}
+
+resource "aws_instance" "web_2" {
+
+  ami                    = data.aws_ami.amzlinux2.id
+  instance_type          = "t2.micro"
+  subnet_id              = local.subnet_id[1]
+  user_data              = file("${path.module}/template/app2-http.sh")
+  vpc_security_group_ids = [aws_security_group.web_server.id]
+  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  key_name               = aws_key_pair.bastion_instance.id
+
+  tags = {
+    Name = "app2"
   }
 }
 
@@ -31,7 +47,7 @@ resource "aws_instance" "registration_app" {
 
   ami                    = data.aws_ami.amzlinux2.id
   instance_type          = "t2.micro"
-  subnet_id              = local.subnet_id[count.index]
+  subnet_id              = element(local.subnet_id, count.index)
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   key_name               = aws_key_pair.bastion_instance.id
