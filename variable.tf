@@ -22,7 +22,7 @@ variable "aws_account_id" {
   description = "Environment this template would be deployed to"
   type        = map(string)
   default = {
-    "default" = "674293488770"
+    "default" = "735972722491"
   }
 }
 
