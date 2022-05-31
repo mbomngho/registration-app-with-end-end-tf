@@ -20,7 +20,7 @@ jobs:
       max-parallel: 1
       matrix:
          include:
-           - environment: prod
+           - environment: sbx
              runner: ubuntu-latest
 
     env:
@@ -45,7 +45,6 @@ jobs:
         rm -rf .terraform
         terraform init -upgrade=true -no-color -input=false
         
-
     - name: Terraform Create Workspace
       id: Workspaces
       run: |
