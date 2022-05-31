@@ -19,3 +19,16 @@ provider "aws" {
     tags = local.mandatory_tag
   }
 }
+
+
+terraform {
+  required_version = ">=1.1.5"
+
+  backend "s3" {
+    bucket         = "registration-app-with-end-end-tf"
+    dynamodb_table = "terraform-lock"
+    key            = "path/env"
+    region         = "us-east-1"
+    encrypt        = "true"
+  }
+}

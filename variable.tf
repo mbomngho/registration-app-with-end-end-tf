@@ -21,9 +21,7 @@ variable "cidr_privsubnet" {
 variable "aws_account_id" {
   description = "Environment this template would be deployed to"
   type        = map(string)
-  default = {
-    "default" = "735972722491"
-  }
+  default     = {}
 }
 
 
@@ -57,19 +55,12 @@ variable "https_port" {
   default     = 8080
 }
 
-
-variable "register_dns" {
-  default = "kojitechs.com"
-}
 variable "dns_name" {
   type    = string
-  default = "kojitechs.com"
+  default = ""
 }
 
 variable "subject_alternative_names" {
-  type = map(string)
-  default = {
-    default = "*.kojitechs.com"
-    sbx     = "*.kelderanyi.com"
-  }
+  type    = map(string)
+  default = {}
 }

@@ -8,6 +8,7 @@ This module was built VPC IN operational-enviroment-vpc[cookiecutter-microservic
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.1.5 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.0 |
 
 ## Providers
@@ -64,18 +65,17 @@ This module was built VPC IN operational-enviroment-vpc[cookiecutter-microservic
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | Environment this template would be deployed to | `map(string)` | <pre>{<br>  "default": "735972722491"<br>}</pre> | no |
+| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | Environment this template would be deployed to | `map(string)` | `{}` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | aws region | `string` | `"us-east-1"` | no |
 | <a name="input_cidr_database"></a> [cidr\_database](#input\_cidr\_database) | list of database cidrs | `list(any)` | <pre>[<br>  "10.0.5.0/24",<br>  "10.0.7.0/24"<br>]</pre> | no |
 | <a name="input_cidr_privsubnet"></a> [cidr\_privsubnet](#input\_cidr\_privsubnet) | list of private cidrs | `list(any)` | <pre>[<br>  "10.0.1.0/24",<br>  "10.0.3.0/24"<br>]</pre> | no |
 | <a name="input_cidr_pubsubnet"></a> [cidr\_pubsubnet](#input\_cidr\_pubsubnet) | list of public cidrs | `list(any)` | <pre>[<br>  "10.0.0.0/24",<br>  "10.0.2.0/24"<br>]</pre> | no |
 | <a name="input_component_name"></a> [component\_name](#input\_component\_name) | n/a | `string` | `"kojitechs"` | no |
 | <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc) | create vpc | `bool` | `true` | no |
-| <a name="input_dns_name"></a> [dns\_name](#input\_dns\_name) | n/a | `string` | `"kojitechs.com"` | no |
+| <a name="input_dns_name"></a> [dns\_name](#input\_dns\_name) | n/a | `string` | `""` | no |
 | <a name="input_http_port"></a> [http\_port](#input\_http\_port) | http from everywhere | `number` | `80` | no |
 | <a name="input_https_port"></a> [https\_port](#input\_https\_port) | https from everywhere | `number` | `8080` | no |
-| <a name="input_register_dns"></a> [register\_dns](#input\_register\_dns) | n/a | `string` | `"kojitechs.com"` | no |
-| <a name="input_subject_alternative_names"></a> [subject\_alternative\_names](#input\_subject\_alternative\_names) | n/a | `map(string)` | <pre>{<br>  "default": "*.kojitechs.com",<br>  "sbx": "*.kelderanyi.com"<br>}</pre> | no |
+| <a name="input_subject_alternative_names"></a> [subject\_alternative\_names](#input\_subject\_alternative\_names) | n/a | `map(string)` | `{}` | no |
 
 ## Outputs
 
