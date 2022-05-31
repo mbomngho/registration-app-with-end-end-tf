@@ -1,4 +1,4 @@
-name: "Terraform Deployment of registration-app"
+name: "Terraform Deployment to sbx"
 
 on:
   workflow_dispatch:
@@ -53,15 +53,15 @@ jobs:
     - name: Terraform Plan
       id: plan
       run: |
-        terraform workspace select prod
-        terraform plan -var-file="prod.tfvars"  -out="plan.prod" 
+        terraform workspace select sbx
+        terraform plan -var-file="sbx.tfvars"  -out="plan.sbx" 
       continue-on-error: true  
 
-    - name: Terraform Destroy
-      if: github.ref == 'refs/heads/master'
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: Destroy
       run: |
-        terraform destroy -auto-approve
+        terraform apply "plan.sbx"
         
   comment:
     runs-on: ubuntu-latest
