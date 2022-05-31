@@ -1,4 +1,4 @@
-aws_account_id = {
+environment = {
   sbx = "674293488770"
 }
 

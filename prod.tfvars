@@ -1,4 +1,4 @@
-aws_account_id = {
+environment = {
   prod = "735972722491"
 }
 
