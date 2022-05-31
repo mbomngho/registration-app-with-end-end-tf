@@ -76,6 +76,3 @@ jobs:
               repo: context.repo.repo,
               body: '👋 Thanks for reporting!'
             })  
-      - name: Check on failures
-      if: (${{ success() }} || ${{ failure() }}) && (${{ steps.hello.outcome }} == 'failure' || ${{ steps.world.outcome }} == 'failure')
-      run: exit 1              
