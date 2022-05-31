@@ -48,11 +48,11 @@ module "alb" {
       #   App1 Target Group - Targets
       targets = {
         my_app1_vm1 = {
-          target_id = aws_instance.web["app1_instance"].id
+          target_id = aws_instance.web[0].id
           port      = 80
         },
         my_app1_vm2 = {
-          target_id = aws_instance.web["app1_instance"].id
+          target_id = aws_instance.web[0].id
           port      = 80
         }
       }
@@ -80,11 +80,11 @@ module "alb" {
       # App2 Target Group - Targets
       targets = {
         my_app2_vm1 = {
-          target_id = aws_instance.web["app2_instance"].id
+          target_id = aws_instance.web[1].id
           port      = 80
         },
         my_app2_vm2 = {
-          target_id = aws_instance.web["app2_instance"].id
+          target_id = aws_instance.web[1].id
           port      = 80
         }
       }
