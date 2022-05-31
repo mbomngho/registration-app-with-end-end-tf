@@ -1,8 +1,8 @@
 
-# Terraform AWS Application Load Balancer (ALB)
+# Terraform AWS Application Load Balancer (ALB)*
+
 module "alb" {
-  source = "terraform-aws-modules/alb/aws"
-  #version = "5.16.0"
+  source  = "terraform-aws-modules/alb/aws"
   version = "6.0.0"
 
   name               = "${var.component_name}-alb"
@@ -48,11 +48,11 @@ module "alb" {
       #   App1 Target Group - Targets
       targets = {
         my_app1_vm1 = {
-          target_id = aws_instance.web.id
+          target_id = aws_instance.web["app1_instance"].id
           port      = 80
         },
         my_app1_vm2 = {
-          target_id = aws_instance.web.id
+          target_id = aws_instance.web["app1_instance"].id
           port      = 80
         }
       }
@@ -80,11 +80,11 @@ module "alb" {
       # App2 Target Group - Targets
       targets = {
         my_app2_vm1 = {
-          target_id = aws_instance.web_2.id
+          target_id = aws_instance.web["app2_instance"].id
           port      = 80
         },
         my_app2_vm2 = {
-          target_id = aws_instance.web_2.id
+          target_id = aws_instance.web["app2_instance"].id
           port      = 80
         }
       }
