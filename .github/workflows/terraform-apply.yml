@@ -39,7 +39,7 @@ jobs:
       id: plan
       run: |
         terraform workspace select sbx
-        terraform plan -var-file="prod.tfvars"  -out="plan.sbx" 
+        terraform plan -var-file="sbx.tfvars"  -out="plan.sbx" 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: apply
