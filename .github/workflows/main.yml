@@ -23,9 +23,16 @@ jobs:
       with:
           version: 1.1.5
           args: '-var-file="sbx.tfvars"'
-    - name: Terraform apply
+    - name: Terraform Init
+      id: init
       run: |
+        rm -rf .terraform
         terraform init
-        terraform workspace select sbx
-        terraform plan
-        terraform apply 
+    - name: Terraform Plan
+      id: plan
+      run: |
+        terraform plan -var-file="sbx.tfvars"  -out="plan.sbx" 
+    - name: Terraform Plan
+      id: apply
+      run: |
+        terraform apply  
