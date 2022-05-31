@@ -6,12 +6,12 @@ locals {
 
   instances = {
     app1_instance = {
-      instance_type = "t2.micro"
+      instance_type = "t2.large"
       subnet_id     = aws_subnet.priv_sub[0].id
       user_data     = file("${path.module}/template/app1-http.sh")
     }
     app2_instance = {
-      instance_type = "t2.xlarge"
+      instance_type = "t2.large"
       subnet_id     = aws_subnet.priv_sub[1].id
       user_data     = file("${path.module}/template/app2-http.sh")
     }
