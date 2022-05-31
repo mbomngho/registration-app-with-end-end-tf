@@ -33,7 +33,7 @@ jobs:
       run: |
         terraform workspace select sbx
         terraform plan -var-file="sbx.tfvars"  -out="plan.sbx" 
-    - name: Terraform Plan
+    - name: Terraform Apply
       id: apply
       run: |
-        terraform apply  
+        terraform apply  "plan.sbx"
