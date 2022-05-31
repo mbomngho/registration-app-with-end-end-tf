@@ -56,7 +56,7 @@ module "alb" {
           port      = 80
         }
       }
-      tags = local.mandatory_tag # Target Group Tags
+      # tags = local.mandatory_tag # Target Group Tags
     },
     # App2 Target Group - TG Index = 1
     {
@@ -88,7 +88,7 @@ module "alb" {
           port      = 80
         }
       }
-      tags = local.mandatory_tag # Target Group Tags
+      #tags = local.mandatory_tag # Target Group Tags
     },
     # App3 Target Group - TG Index = 2
     {
