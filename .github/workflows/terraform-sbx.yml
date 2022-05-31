@@ -44,20 +44,23 @@ jobs:
       run: |
         rm -rf .terraform
         terraform init -upgrade=true -no-color -input=false
+        
 
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color   
+    - name: Terraform Create Workspace
+      id: Workspaces
+      run: |
+        terraform workspace new ${{ matrix.environment }}
+        terraform workspace select ${{ matrix.environment }} 
+      continue-on-error: true   
 
     - name: Terraform Plan
       id: plan
       run: |
-        terraform workspace select ${{ matrix.environment }}
         terraform plan -var-file="${{ matrix.environment }}.tfvars"  -out="plan.${{ matrix.environment }}" -no-color 
       continue-on-error: true  
 
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/master'
       id: Destroy
       run: |
         terraform apply "plan.${{ matrix.environment }}"
