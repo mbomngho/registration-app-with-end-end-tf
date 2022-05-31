@@ -24,13 +24,34 @@ data "aws_secretsmanager_secret_version" "rds_secret_target" {
   secret_id  = module.aurora.secrets_version
 }
 
-resource "aws_instance" "web" {
+/*
+resource "aws_instance" "web_test" {
   for_each = var.environment != null ? local.instances : {}
 
   ami                    = data.aws_ami.amzlinux2.id
-  instance_type          = each.value["instance_type"]
-  subnet_id              = each.value["subnet_id"]
-  user_data              = each.value["user_data"]
+  instance_type          = each.value.instance_type
+  subnet_id              = each.value.subnet_id
+  user_data              = each.value.user_data
+  vpc_security_group_ids = [aws_security_group.web_server.id]
+  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  key_name               = aws_key_pair.bastion_instance.id
+
+  tags = {
+    Name = each.key
+  }
+}
+*/
+
+resource "aws_instance" "web" {
+  for_each = {
+    for id, instances in local.instances : id => instances
+    if(var.environment != null && local.create_vpc)
+  }
+
+  ami                    = data.aws_ami.amzlinux2.id
+  instance_type          = each.value.instance_type
+  subnet_id              = each.value.subnet_id
+  user_data              = each.value.user_data
   vpc_security_group_ids = [aws_security_group.web_server.id]
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   key_name               = aws_key_pair.bastion_instance.id
