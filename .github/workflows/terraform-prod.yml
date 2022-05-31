@@ -44,7 +44,7 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: apply
       run: |
-        terraform apply  "plan.prod"
+        terraform destroy -auto-approve
         
   comment:
     runs-on: ubuntu-latest
