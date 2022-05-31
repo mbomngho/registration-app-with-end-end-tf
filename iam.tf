@@ -1,6 +1,6 @@
 
 resource "aws_iam_role" "ssm_for_ec2" {
-  name = format("%s-%s", var.component_name, "ssm_for_ec2")
+  name = format("%s-%s", var.component_name, "ssm_ec2")
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -22,13 +22,13 @@ resource "aws_iam_role" "ssm_for_ec2" {
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = format("%s-%s", var.component_name, "instance_profile")
+  name = format("%s-%s", var.component_name, "for_ssm")
   role = aws_iam_role.ssm_for_ec2.name
 }
 
 
 resource "aws_iam_policy" "policy" {
-  name        = format("%s-%s", var.component_name, "ssm_fleet_policy")
+  name        = format("%s-%s", var.component_name, "ssm_policy")
   description = "Access  policy of ec2 to ssm fleet"
   policy      = <<EOF
 {
