@@ -72,5 +72,5 @@ output "lb_zone_id" {
 
 output "dns_name" {
 
-  value = format("https://%s", var.register_dns)
+  value = format("https://%s", var.dns_name)
 }

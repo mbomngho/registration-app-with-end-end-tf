@@ -3,22 +3,35 @@ name: Example installing Terraform
 on: [push]
 
 jobs:
-  build:
+  terraform:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [12.x]
-
+    env:
+         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         AWS_DEFAULT_REGION: us-east-1
     steps:
     - uses: actions/checkout@v1
     - name: Install Terraform
       uses: little-core-labs/install-terraform@v2.0.0
       with:
-          version: 0.13.4
-    - name: Terraform apply
+          version: 1.1.5
+          args: '-var-file="prod.tfvars"'
+    - name: Terraform Init
+      id: init
       run: |
+        rm -rf .terraform
         terraform init
-        terraform plan
-        terraform apply -auto-approve
+    - name: Terraform Plan
+      id: plan
+      run: |
+        terraform workspace select prod
+        terraform plan -var-file="prod.tfvars"  -out="plan.prod" 
+    - name: Terraform Apply
+      id: apply
+      run: |
+        terraform apply  "plan.prod"
