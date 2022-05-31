@@ -50,12 +50,12 @@ jobs:
       id: Workspaces
       run: |
         terraform workspace new ${{ matrix.environment }}
-        terraform workspace select ${{ matrix.environment }} 
       continue-on-error: true   
 
     - name: Terraform Plan
       id: plan
       run: |
+        terraform workspace select ${{ matrix.environment }} 
         terraform plan -var-file="${{ matrix.environment }}.tfvars"  -out="plan.${{ matrix.environment }}" -no-color 
       continue-on-error: true  
 
