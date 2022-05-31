@@ -62,7 +62,7 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: Destroy
       run: |
-        terraform destroy -auto-approve
+        terraform destroy -var-file="sbx.tfvars" -auto-approve
         
   comment:
     runs-on: ubuntu-latest
