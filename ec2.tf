@@ -3,6 +3,19 @@ locals {
   subnet_id = [aws_subnet.priv_sub[0].id, aws_subnet.priv_sub[1].id]
   Name      = ["app_instance_1", "app_instance_2"]
   mysql     = data.aws_secretsmanager_secret_version.rds_secret_target
+
+  instances = {
+    app1_instance = {
+      instance_type = "t2.micro"
+      subnet_id     = aws_subnet.priv_sub[0].id
+      user_data     = file("${path.module}/template/app1-http.sh")
+    }
+    app2_instance = {
+      instance_type = "t2.xlarge"
+      subnet_id     = aws_subnet.priv_sub[1].id
+      user_data     = file("${path.module}/template/app2-http.sh")
+    }
+  }
 }
 
 data "aws_secretsmanager_secret_version" "rds_secret_target" {
@@ -12,32 +25,18 @@ data "aws_secretsmanager_secret_version" "rds_secret_target" {
 }
 
 resource "aws_instance" "web" {
+  for_each = var.environment != null ? local.instances : {}
 
   ami                    = data.aws_ami.amzlinux2.id
-  instance_type          = "t2.micro"
-  subnet_id              = local.subnet_id[0]
-  user_data              = file("${path.module}/template/app1-http.sh")
+  instance_type          = each.value["instance_type"]
+  subnet_id              = each.value["subnet_id"]
+  user_data              = each.value["user_data"]
   vpc_security_group_ids = [aws_security_group.web_server.id]
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   key_name               = aws_key_pair.bastion_instance.id
 
   tags = {
-    Name = "app1"
-  }
-}
-
-resource "aws_instance" "web_2" {
-
-  ami                    = data.aws_ami.amzlinux2.id
-  instance_type          = "t2.micro"
-  subnet_id              = local.subnet_id[1]
-  user_data              = file("${path.module}/template/app2-http.sh")
-  vpc_security_group_ids = [aws_security_group.web_server.id]
-  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
-  key_name               = aws_key_pair.bastion_instance.id
-
-  tags = {
-    Name = "app2"
+    Name = each.key
   }
 }
 
