@@ -31,7 +31,7 @@ jobs:
       run: |
         terraform workspace select prod
         terraform plan -var-file="prod.tfvars"  -out="plan.prod" 
-    - name: Terraform Apply
-      id: apply
-      run: |
-        terraform apply  "plan.prod"
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: |
+    #     terraform apply  "plan.prod"

@@ -3,7 +3,7 @@ aws_account_id = {
 }
 
 subject_alternative_names = {
-  sbx = "*.kojitechs.com"
+  prod = "*.kojitechs.com"
 }
 
 dns_name = "kojitechs.com"
