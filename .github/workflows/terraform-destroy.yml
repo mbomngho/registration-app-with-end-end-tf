@@ -20,7 +20,7 @@ jobs:
       max-parallel: 1
       matrix:
          include:
-           - environment: prod
+           - environment: sbx
              runner: ubuntu-latest
 
     env:
@@ -58,10 +58,10 @@ jobs:
       continue-on-error: true  
 
     - name: Terraform Destroy
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      if: github.ref == 'refs/heads/master'
       id: Destroy
       run: |
-        terraform apply 
+        terraform destroy -auto-approve
 
   comment:
     runs-on: ubuntu-latest
