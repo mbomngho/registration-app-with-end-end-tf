@@ -61,7 +61,13 @@ jobs:
       if: github.ref == 'refs/heads/master'
       id: Destroy
       run: |
-        terraform destroy -auto-approve
+        terraform destroy -var-file="${{ matrix.environment }}.tfvars" -auto-approve
+
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    #   id: Apply
+    #   run: |
+    #     terraform apply "plan.${{ matrix.environment }}"    
 
   comment:
     runs-on: ubuntu-latest
