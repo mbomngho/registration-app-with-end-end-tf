@@ -47,6 +47,7 @@ jobs:
         
 
     - name: Terraform Create Workspace
+      if: steps.composer-run.outcome != 'success' && steps.composer-run.conclusion != 'success'
       id: Workspaces
       run: |
         terraform workspace new ${{ matrix.environment }} 
