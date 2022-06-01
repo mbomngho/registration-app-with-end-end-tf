@@ -32,7 +32,7 @@
 #}
 
 output "pub_subnet" {
-  value = aws_subnet.public_subnet[*].id
+  value = { for id, subnets in aws_subnet.public_subnet : id => subnets.id }
 }
 
 # Deprecated
