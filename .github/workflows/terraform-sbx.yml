@@ -61,9 +61,7 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: Destroy
       run: |
-        terraform apply 
-      with:
-          auto_approve: false  
+        terraform apply "plan.${{ matrix.environment }}"
 
   comment:
     runs-on: ubuntu-latest
