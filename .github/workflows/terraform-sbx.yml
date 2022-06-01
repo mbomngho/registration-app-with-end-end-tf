@@ -58,11 +58,17 @@ jobs:
         terraform plan -var-file="${{ matrix.environment }}.tfvars"  -out="plan.${{ matrix.environment }}" -no-color 
       continue-on-error: true  
 
-    - name: Terraform Apply
+    - name: Terraform Desytoy
       if: github.ref == 'refs/heads/master'
       id: Destroy
       run: |
-        terraform apply "plan.${{ matrix.environment }}"
+        terraform apply -auto-approve
+
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/master'
+    #   id: Destroy
+    #   run: |
+    #     terraform apply "plan.${{ matrix.environment }}"
 
   comment:
     runs-on: ubuntu-latest
