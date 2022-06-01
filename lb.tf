@@ -2,13 +2,14 @@
 # Terraform AWS Application Load Balancer (ALB)*
 
 module "alb" {
+
   source  = "terraform-aws-modules/alb/aws"
   version = "6.0.0"
 
   name               = "${var.component_name}-alb"
   load_balancer_type = "application"
   vpc_id             = local.vpc_id
-  subnets            = aws_subnet.public_subnet.*.id
+  subnets            = values(local.pub_subnet_id)
 
   security_groups = [aws_security_group.web.id]
 

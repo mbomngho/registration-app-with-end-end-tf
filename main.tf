@@ -15,9 +15,10 @@ locals {
     component_name          = var.component_name
   }
 
-  vpc_id     = try(aws_vpc.Kojitechs[0].id, "")
-  create_vpc = var.create_vpc
-  azs        = data.aws_availability_zones.available.names
+  vpc_id        = try(aws_vpc.Kojitechs[0].id, "")
+  create_vpc    = var.create_vpc
+  azs           = data.aws_availability_zones.available.names
+  pub_subnet_id = { for id, subnets in aws_subnet.public_subnet : id => subnets.id }
 }
 
 data "aws_availability_zones" "available" {
@@ -47,18 +48,31 @@ resource "aws_internet_gateway" "igw" {
     "Name" = "kojitechs_igw"
   }
 }
+locals {
+  sunbet = {
+    subnet_1 = {
+      cidr_blocks = var.cidr_pubsubnet[0]
+      az          = local.azs[0]
+    }
+    subnet_2 = {
+      cidr_blocks = var.cidr_pubsubnet[1]
+      az          = local.azs[1]
+    }
+  }
+}
 
 # creating public subnet
 resource "aws_subnet" "public_subnet" {
-  count = local.create_vpc ? length(var.cidr_pubsubnet) : 0
+  #count = local.create_vpc ? length(var.cidr_pubsubnet) : 0
+  for_each = local.create_vpc ? local.sunbet : {}
 
   vpc_id                  = local.vpc_id
-  cidr_block              = var.cidr_pubsubnet[count.index]
+  cidr_block              = each.value.cidr_blocks
   map_public_ip_on_launch = true
-  availability_zone       = local.azs[count.index]
+  availability_zone       = each.value.az
 
   tags = {
-    "Name" = "public_subnet_${count.index + 1}"
+    "Name" = each.key
   }
 }
 
@@ -102,9 +116,9 @@ resource "aws_route_table" "route_table" {
 
 
 resource "aws_route_table_association" "route_tables_ass" {
-  count = local.create_vpc ? length(var.cidr_pubsubnet) : 0
+  for_each = toset(keys(aws_subnet.public_subnet))
 
-  subnet_id      = aws_subnet.public_subnet.*.id[count.index]
+  subnet_id      = aws_subnet.public_subnet[each.key].id
   route_table_id = aws_route_table.route_table.id
 }
 
@@ -132,7 +146,7 @@ resource "aws_nat_gateway" "ngw_1" {
   count = local.create_vpc ? 1 : 0
 
   allocation_id = aws_eip.eip[0].id
-  subnet_id     = aws_subnet.public_subnet[0].id
+  subnet_id     = [for id in aws_subnet.public_subnet : id.id][0]
 
   depends_on = [aws_internet_gateway.igw]
 
