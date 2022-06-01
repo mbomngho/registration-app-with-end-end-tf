@@ -20,7 +20,7 @@ jobs:
       max-parallel: 1
       matrix:
          include:
-           - environment: prod
+           - environment: sbx
              runner: ubuntu-latest
 
     env:
