@@ -19,6 +19,17 @@ locals {
   create_vpc    = var.create_vpc
   azs           = data.aws_availability_zones.available.names
   pub_subnet_id = { for id, subnets in aws_subnet.public_subnet : id => subnets.id }
+
+  sunbet = {
+    subnet_1 = {
+      cidr_blocks = var.cidr_pubsubnet[0]
+      az          = local.azs[0]
+    }
+    subnet_2 = {
+      cidr_blocks = var.cidr_pubsubnet[1]
+      az          = local.azs[1]
+    }
+  }
 }
 
 data "aws_availability_zones" "available" {
@@ -46,18 +57,6 @@ resource "aws_internet_gateway" "igw" {
 
   tags = {
     "Name" = "kojitechs_igw"
-  }
-}
-locals {
-  sunbet = {
-    subnet_1 = {
-      cidr_blocks = var.cidr_pubsubnet[0]
-      az          = local.azs[0]
-    }
-    subnet_2 = {
-      cidr_blocks = var.cidr_pubsubnet[1]
-      az          = local.azs[1]
-    }
   }
 }
 
@@ -111,7 +110,6 @@ resource "aws_route_table" "route_table" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw[0].id
   }
-
 }
 
 
