@@ -20,7 +20,7 @@ jobs:
       max-parallel: 1
       matrix:
          include:
-           - environment: sbx
+           - environment: prod
              runner: ubuntu-latest
 
     env:
@@ -45,30 +45,24 @@ jobs:
         rm -rf .terraform
         terraform init -upgrade=true -no-color -input=false
         
+
     - name: Terraform Create Workspace
       id: Workspaces
       run: |
-        terraform workspace new ${{ matrix.environment }}
+        terraform workspace new ${{ matrix.environment }} 
       continue-on-error: true   
 
     - name: Terraform Plan
       id: plan
       run: |
-        terraform workspace select ${{ matrix.environment }} 
         terraform plan -var-file="${{ matrix.environment }}.tfvars"  -out="plan.${{ matrix.environment }}" -no-color 
       continue-on-error: true  
 
-    - name: Terraform Desytoy
-      if: github.ref == 'refs/heads/master'
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       id: Destroy
       run: |
-        terraform apply -auto-approve
-
-    # - name: Terraform Apply
-    #   if: github.ref == 'refs/heads/master'
-    #   id: Destroy
-    #   run: |
-    #     terraform apply "plan.${{ matrix.environment }}"
+        terraform apply "plan.${{ matrix.environment }}"
 
   comment:
     runs-on: ubuntu-latest
