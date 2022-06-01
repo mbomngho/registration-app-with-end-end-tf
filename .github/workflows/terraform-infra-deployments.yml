@@ -1,4 +1,4 @@
-name: "Terraform Deployment to ${{ matrix.environment }}"
+name: "Terraform Deployment "
 
 on:
   workflow_dispatch:
